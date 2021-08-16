@@ -1,0 +1,94 @@
+<%- include('boilerplate/header'); -%>
+
+<!-- Form -->
+<div class="form-details" style="margin-top:-50px">
+    <div class="bg-gray-500 py-12 mt-12 mb-0 w-full flex flex-col items-center border-t-2 border-black">
+        <h2 class="pb-1 font-bold text-xl text-black">
+            Place Your Shipping Order in Seconds</h2>
+            
+
+        <form class="max-w-xl w-full text-black mt-4 px-8 md:px-0" action="/pay" method="post" autocomplete="on">
+
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label class="sr-only ">Your Name</label>
+                <input required class="placeholder-black bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2" name="s_name" type="text" placeholder="Your Name" id="first_name">
+                
+                <label class="sr-only">Phone Number</label>
+                <input required class="placeholder-black bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2" name="s_pno" type="number" placeholder="Phone Number" id="last_name">
+            </div>
+            
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="email" class="sr-only">Your email</label>
+                <input required class="bg-gray-300 mt-4 placeholder-black md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2" name="s_email" type="email" placeholder="john@email.com" id="email">
+                
+                <label for="title" class="sr-only">Your Pin Code</label>
+                <select class=" bg-gray-300 mt-4 md:mx-2 border placeholder-black border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2 " required="required" name="s_pin" id="integration_city_id">
+                    <option value="">Sender's pincode</option>
+                    <option value="248001">248001</option>
+                    <option value="249201">249201</option>
+                    <option value="249401">249401</option>
+                    <option value="247664">247664</option>
+                    <option value="248122">248122</option>
+                    <option value="246149">246149</option>
+                    <option value="247001">247001</option>
+                  </select>
+                <!-- <input required class="bg-gray-300 mt-4 md:mx-2 border placeholder-black border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2" name="s_pin" type="text" placeholder="Your Pin Code" id="title"> -->
+            </div>
+
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="title" class="sr-only">Your Address</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 placeholder-black rounded-lg py-6 px-4 block w-full" type="address"  name="s_address" placeholder="Your Address" name="" id="">
+            </div>
+             
+            <!-- ----------------------------------------------------------- -->
+
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="first_name" class="sr-only">Recivers Name</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 placeholder-black px-4 block w-full md:w-1/2" name="r_name" type="text" placeholder="Recivers Name" id="first_name">
+                
+                <label for="last_name" class="sr-only">Phone Number</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full placeholder-black md:w-1/2" name="r_pno" type="number" placeholder="Phone Number" id="last_name">
+            </div>
+            
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="email" class="sr-only">Your email</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full placeholder-black md:w-1/2" type="email" name="r_email" placeholder="john@email.com" id="email">
+                
+                <label for="title" class="sr-only">Recivers Pin Code</label>
+                <select class=" bg-gray-300 mt-4 md:mx-2 border placeholder-black border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2 " required="required" name="r_pin" id="integration_city_id">
+                    <option value="">Receivers PinCode</option>
+                    <option value="248001">248001</option>
+                    <option value="249201">249201</option>
+                    <option value="249401">249401</option>
+                    <option value="247664">247664</option>
+                    <option value="248122">248122</option>
+                    <option value="246149">246149</option>
+                    <option value="247001">247001</option>
+                  </select>
+                <!-- <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 placeholder-black rounded-lg py-2 px-4 block w-full md:w-1/2" type="text" name="r_pin" placeholder="Recivers Pin Code" id="title"> -->
+            </div>
+
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="title" class="sr-only">Recivers Address</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-6 placeholder-black px-4 block w-full" name="r_address" type="text" placeholder="Recivers Address">
+            </div>
+
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <label for="email" class="sr-only">Items Weight</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full placeholder-black md:w-1/2" name="i_weight" type="number" placeholder="Items weight" id="email">
+                
+                <label for="title" class="sr-only">Distance</label>
+                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2 placeholder-black" name="distance" type="text" placeholder="Distance" id="title">
+            </div>
+            
+            <div class="flex flex-col md:flex-row md:-mx-2">
+                <button id="rzp-button1" type="submit" class="bg-green-600 hover:bg-green-400 text-sm mt-4 md:mx-2 rounded-lg py-2 px-4 block w-full">Pay <%=amount%> ₹</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+<%- include('boilerplate/footer'); -%>

@@ -1,0 +1,20 @@
+<%- include('boilerplate/header'); -%>
+
+<div class="w-96 m-12 h-96 rounded shadow-2xl justify-around bg-gray-600 flex flex-col border-box p-4">
+  <p class="text-black uppercase text-sm">Track Id:<span class="font-bold"><%=data[0].user.trackId%></span></p>
+  
+  <p class="text-2xl font-bold text-black uppercase my-4">Status Of Your Order : <span class="text-green-800"><%=data[0].status%></span> </p>
+  <p class="text-xl  my-1">Senders Address : <span><%=data[0].order[0].s_address%></span> </p>
+  <p class="text-xl my-1">Recivers Adress : <span><%=data[0].order[0].r_address%></span> </p>
+  <p class="text-xl my-1">Senders Number : <span><%=data[0].order[0].s_pno%></span> </p>
+  <p class="text-xl my-1">Recivers Number : <span><%=data[0].order[0].r_pno%></span> </p>
+  <p class="text-xl my-1">Distance : <span>Distance</span> </p>
+
+  <p class="text-md mb-4 text-green-800 font-bold uppercase text-gray-900">Payment Status : <span><%=data[0].user.payment_status%></span></p>
+  <div class="flex flex-row">
+      <a class="bg-yellow-700 px-4 py-2 rounded uppercase font-bold text-sm text-white">Delivery Plan <span><%=data[0].package[0].delivery%></span>Hrs Delivery</a>
+  </div>
+</div>
+
+
+<%- include('boilerplate/footer'); -%>

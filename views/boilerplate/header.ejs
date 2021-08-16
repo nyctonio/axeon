@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title></title>
+</head>
+<body class="bg-gray-300">
+
+
+<!-- ------------------- -->
+
+<nav class="bg-white shadow dark:bg-gray-800" style="background-color: rgb(22,21,21);">
+  <div class="container px-6 py-0 mx-auto md:flex md:justify-between md:items-center">
+      <div class="flex items-center justify-between">
+       <a href="/"> <img class="m-3" class="bg-pink-300" src="../logo.svg"  width="130px" height="150px">  </a>
+        <!-- <div>
+              <!-- <a class="text-xl font-bold text-red-600 dark:text-white md:text-2xl hover:text-gray-200 dark:hover:text-gray-300" style="color: #eb3656;" href="/">axeon</a> -->
+          <!-- </div> --> 
+          <!-- Mobile menu button -->
+          <div id="toggle" class="block md:hidden">
+            <button class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+              <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+            </button>
+          </div>
+
+      </div>
+
+      <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
+      <div id="nav" class="items-center md:block">
+          <div class="flex flex-col md:flex-row md:mx-6">
+              <a class="my-1 text-md font-medium text-white dark:text-gray-200 hover:text-gray-200 dark:hover:text-gray-200 md:mx-4 md:my-0" href="/">Track</a>
+              <a class="my-1 text-md font-medium text-white dark:text-gray-200 hover:text-gray-200 dark:hover:text-gray-200 md:mx-4 md:my-0" href="/#order-items">Order</a>
+              <a class="my-1 text-md font-medium text-white dark:text-gray-200 hover:text-gray-200 dark:hover:text-gray-200 md:mx-4 md:my-0" href="/aboutus">About</a>
+              <a href="/contactus" class="inline-block text-sm px-4 py-2 mx-2 my-3 mb-4 md:my-1 md:mb-0 leading-none border-none rounded text-white border-white hover:border-transparent hover:text-teal-100 hover:bg-red-600 lg:mt-0" style="background-color: #eb3656;">Contact Us</a>
+          </div>
+
+      </div>
+
+
+  </div>
+</nav>
+
+<script>
+  let tog = 0;
+  document.getElementById('toggle').addEventListener('click',()=>{
+    if(tog==0){
+      let element = document.getElementById("nav");
+      element.classList.add("hidden");
+      // document.getElementById('nav').style.display='none';
+      tog=1;
+    }else{
+      // document.getElementById('nav').style.display='flex';
+      let element = document.getElementById("nav");
+      element.classList.remove("hidden");
+      tog=0;
+    }
+  })
+</script>
