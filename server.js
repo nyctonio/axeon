@@ -9,10 +9,14 @@ dotenv.config();
 let app = express();
 app.use( express.static( "public" ) );
 
+let conn = false;
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://admin:vimal@cluster0.nppm5.mongodb.net/order', {useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex: true,
 })
-.then(() => console.log("Database connected!"))
+.then(() => {
+  console.log("Database connected!")
+  conn = true;
+})
 .catch((err) => {
   console.log(`DB Connection Error: ${err.message}`);
 });
@@ -60,7 +64,10 @@ app.set("view engine", "ejs");
 
 //Routes
 app.get("/", (req, res) => {
-  res.render("home");
+  if(conn){
+    return res.render("home");
+  }
+  res.render("error",{message:"database not connected check your internet connection"});
 });
 
 app.get("/checkout", (req, res) => {
@@ -132,7 +139,7 @@ app.post('/track',async (req,res)=>{
     Order.find({'user.trackId':trackid},function(err, data){
       if(err){return res.send(err)}
       if(data.length==0){
-        return res.send("No Order From This Tracking ID");
+        return res.render("error",{message:"No Order From This Tracking ID"});
       }
       return res.render('track',{data:data})
     });
@@ -230,7 +237,7 @@ app.post("/api/payment/verify",async (req, res) => {
       order.save((err)=>{if(err){throw err;}else{console.log("data saved")}});
     } catch (error) {
       console.log(error)
-      res="order not placed successfully if payment deducted you will get it back within 24 hours";
+      return res.render("error",{message:"order not placed successfully if payment deducted you will get refund in 24 hours"});
     }
   }
 	res.send(response);
