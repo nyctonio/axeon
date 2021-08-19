@@ -51,11 +51,9 @@
             </div>
             
             <div class="flex flex-col md:flex-row md:-mx-2">
-                <label for="email" class="sr-only">Your email</label>
-                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full placeholder-black md:w-1/2" type="email" name="r_email" placeholder="john@email.com" id="email">
                 
                 <label for="title" class="sr-only">Recivers Pin Code</label>
-                <select class=" bg-gray-300 mt-4 md:mx-2 border placeholder-black border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2 " required="required" name="r_pin" id="integration_city_id">
+                <select class=" bg-gray-300 mt-4 md:mx-2 border placeholder-black border-gray-600 rounded-lg py-2 px-4 block w-full " required="required" name="r_pin" id="integration_city_id">
                     <option value="">Receivers PinCode</option>
                     <option value="248001">248001</option>
                     <option value="249201">249201</option>
@@ -73,14 +71,7 @@
                 <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-6 placeholder-black px-4 block w-full" name="r_address" type="text" placeholder="Recivers Address">
             </div>
 
-            <div class="flex flex-col md:flex-row md:-mx-2">
-                <label for="email" class="sr-only">Items Weight</label>
-                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full placeholder-black md:w-1/2" name="i_weight" type="number" placeholder="Items weight" id="email">
-                
-                <label for="title" class="sr-only">Distance</label>
-                <input required class="bg-gray-300 mt-4 md:mx-2 border border-gray-600 rounded-lg py-2 px-4 block w-full md:w-1/2 placeholder-black" name="distance" type="text" placeholder="Distance" id="title">
-            </div>
-            
+            <input class="hidden" name="id" value="<%=id%>" type="text">
             <div class="flex flex-col md:flex-row md:-mx-2">
                 <button id="rzp-button1" type="submit" class="bg-green-600 hover:bg-green-400 text-sm mt-4 md:mx-2 rounded-lg py-2 px-4 block w-full">Pay <%=amount%> ₹</button>
             </div>

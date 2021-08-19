@@ -22,9 +22,6 @@ mongoose.connect('mongodb+srv://admin:vimal@cluster0.nppm5.mongodb.net/order', {
 });
 
 // our data schemas
-
-
-
 const orderSchema={
   time:String,
   user:{
@@ -36,11 +33,14 @@ const orderSchema={
   },
   order:[],
   package:[],
-  status:{type: String, default: 'Order Placed Successfully'},
+  amount:String,
+  status:{type: String, default: 'Order Pending'},
 }
 
 const Order = mongoose.model("Order",orderSchema);
 
+const placedSchema = {order:[]}
+const Placed = mongoose.model("Placed",placedSchema);
 
 
 const razorpay = new Razorpay({
@@ -48,9 +48,9 @@ const razorpay = new Razorpay({
 	key_secret: 'oDqxNMo9mQ1S6JLE9f0JGGm0'
 })
 
-let order_details={}
-let package_det=""
-let amount
+// let order_details={}
+// let package_det=""
+// let amount
 //Middlewares
 app.use(cors());
 app.use(express.json());
@@ -92,7 +92,7 @@ app.get("/contactus", (req, res) => {
   res.render("contactus");
 });
 // getting order details from user
-app.post('/pay',(req,res)=>{
+app.post('/pay',async (req,res)=>{
   console.log(req.body);
   order_details={
     s_name: req.body.s_name,
@@ -102,13 +102,27 @@ app.post('/pay',(req,res)=>{
     s_address: req.body.s_address,
     r_name: req.body.r_name,
     r_pno: req.body.r_pno,
-    r_email: req.body.r_email,
     r_pin: req.body.r_pin,
     r_address: req.body.r_address,
-    i_weight: req.body.i_weight,
-    distance: req.body.distance
   }
-  res.render('pay',{amount:amount,order_details:order_details})
+  try {
+    let d = new Date();
+    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
+    let order = await Order.find({_id:req.body.id});
+    order=order[0];
+    console.log(order)
+    order.time=now;
+    order.order.push(order_details);
+    order.save(function(err, obj) {
+      if(err){throw err}
+      console.log(obj._id);
+      return res.render('pay',{amount:obj.amount,weight:order.package[0].weight,distance:order.package[0].distance,order_details:order_details,id:obj._id})
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error',{message:"some error occoured"})
+  }
+  
 })
 
 app.post('/order1',(req,res)=>{
@@ -118,8 +132,24 @@ app.post('/order1',(req,res)=>{
     weight:req.body.weight1,
     delivery:req.body.del_time
   }
-  amount=amount_calc(package_det)
-  res.render('order',{amount:amount})
+  const amount=amount_calc(package_det)
+  try {
+    const order  = new Order();
+    let d = new Date();
+    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
+    order.time=now;
+    order.package.push(package_det);
+    order.amount=amount;
+    order.save(function(err, obj) {
+      if(err){throw err}
+      console.log(obj._id);
+      return res.render('order',{amount:amount,id:obj._id})
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error',{message:"some error occoured"})
+  }
+  // res.render('order',{amount:amount,id:})
 })
 
 app.post('/order2',(req,res)=>{
@@ -129,8 +159,23 @@ app.post('/order2',(req,res)=>{
     weight:req.body.weight2,
     delivery:req.body.del_time
   }
-  amount=amount_calc(package_det)
-  res.render('order',{amount:amount})
+  const amount=amount_calc(package_det)
+  try {
+    const order  = new Order();
+    let d = new Date();
+    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
+    order.time=now;
+    order.package.push(package_det);
+    order.amount=amount;
+    order.save(function(err, obj) {
+      if(err){throw err}
+      console.log(obj._id);
+      return res.render('order',{amount:amount,id:obj._id})
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error',{message:"some error occoured"})
+  }
 })
 
 app.post('/track',async (req,res)=>{
@@ -219,25 +264,28 @@ app.post("/api/payment/verify",async (req, res) => {
 	  .digest("hex");
 	console.log("sig" + req.body.razorpay_signature);
 	console.log("sig" + expectedSignature);
-	var response = { status: "failure" };
+	let response = { status: "failure" };
 	if (expectedSignature === req.body.razorpay_signature){
     response = { status: "success" };
     try {
-      const order = new Order;
+      let order = await Order.find({_id:req.body.id});
+      order=order[0];
       order.user.trackId=req.body.razorpay_order_id;
       order.user.razorpay_order_id=req.body.razorpay_order_id;
       order.user.razorpay_payment_id=req.body.razorpay_payment_id;
       order.user.razorpay_signature=req.body.razorpay_signature;
       order.user.payment_status="success";
-      order.order.push(order_details);
-      order.package.push(package_det);
       let d = new Date();          
       let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
       order.time=now;
+      order.status="Order placed Successfully";
       order.save((err)=>{if(err){throw err;}else{console.log("data saved")}});
+      const placed = new Placed();
+      placed.order.push(order);
+      placed.save((err)=>{if(err){throw err;}else{console.log("data saved")}});
     } catch (error) {
       console.log(error)
-      return res.render("error",{message:"order not placed successfully if payment deducted you will get refund in 24 hours"});
+      return res.send({status:"data not saved"});
     }
   }
 	res.send(response);
