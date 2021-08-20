@@ -48,6 +48,31 @@ const razorpay = new Razorpay({
 	key_secret: 'oDqxNMo9mQ1S6JLE9f0JGGm0'
 })
 
+// this function will calculte the price of the item according to its weight
+
+function amount_calc(package_det){
+  let data={
+    "12":{
+      "1kg":{"5km":"60","10km":"65","15km":"70","20km":"80","30km":"85","40km":"90","50km":"95"},
+      "5kg":{"5km":"65","10km":"69","15km":"80","20km":"90","30km":"110","40km":"120","50km":"130"},
+      "10kg":{"5km":"95","10km":"120","15km":"140","20km":"160","30km":"170","40km":"180","50km":"190"},
+      "20kg":{"5km":"120","10km":"135","15km":"165","20km":"175","30km":"185","40km":"189","50km":"199"},
+      "25kg":{"5km":"125","10km":"160","15km":"189","20km":"195","30km":"210","40km":"220","50km":"230"},
+      "30kg":{"5km":"140","10km":"175","15km":"200","20km":"215","30km":"230","40km":"235","50km":"240"}
+    },
+    "24":{
+      "1kg":{"60km":"100"},
+      "5kg":{"60km":"125"},
+      "10kg":{"60km":"195"},
+      "20kg":{"60km":"265"},
+      "25kg":{"60km":"280"},
+      "30kg":{"60km":"290"}
+    }
+  }
+
+  return data[package_det.delivery][package_det.weight][package_det.distance];
+}
+
 // let order_details={}
 // let package_det=""
 // let amount
@@ -91,39 +116,23 @@ app.get("/termandcondition", (req, res) => {
 app.get("/contactus", (req, res) => {
   res.render("contactus");
 });
-// getting order details from user
-app.post('/pay',async (req,res)=>{
-  console.log(req.body);
-  order_details={
-    s_name: req.body.s_name,
-    s_pno: req.body.s_pno,
-    s_email: req.body.s_email,
-    s_pin: req.body.s_pin,
-    s_address: req.body.s_address,
-    r_name: req.body.r_name,
-    r_pno: req.body.r_pno,
-    r_pin: req.body.r_pin,
-    r_address: req.body.r_address,
-  }
+
+app.post('/track',async (req,res)=>{
+  const trackid=req.body.track;
   try {
-    let d = new Date();
-    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
-    let order = await Order.find({_id:req.body.id});
-    order=order[0];
-    console.log(order)
-    order.time=now;
-    order.order.push(order_details);
-    order.save(function(err, obj) {
-      if(err){throw err}
-      console.log(obj._id);
-      return res.render('pay',{amount:obj.amount,weight:order.package[0].weight,distance:order.package[0].distance,order_details:order_details,id:obj._id})
+    Order.find({'user.trackId':trackid},function(err, data){
+      if(err){return res.send(err)}
+      if(data.length==0){
+        return res.render("error",{message:"No Order From This Tracking ID"});
+      }
+      return res.render('track',{data:data})
     });
   } catch (error) {
-    console.log(error);
-    res.render('error',{message:"some error occoured"})
+    return res.send(JSON.stringify(error))
   }
-  
 })
+
+
 
 app.post('/order1',(req,res)=>{
   console.log(req.body)
@@ -178,68 +187,70 @@ app.post('/order2',(req,res)=>{
   }
 })
 
-app.post('/track',async (req,res)=>{
-  const trackid=req.body.track;
+// getting order details from user
+app.post('/pay',async (req,res)=>{
+  console.log(req.body);
+  order_details={
+    s_name: req.body.s_name,
+    s_pno: req.body.s_pno,
+    s_email: req.body.s_email,
+    s_pin: req.body.s_pin,
+    s_address: req.body.s_address,
+    r_name: req.body.r_name,
+    r_pno: req.body.r_pno,
+    r_pin: req.body.r_pin,
+    r_address: req.body.r_address,
+  }
   try {
-    Order.find({'user.trackId':trackid},function(err, data){
-      if(err){return res.send(err)}
-      if(data.length==0){
-        return res.render("error",{message:"No Order From This Tracking ID"});
-      }
-      return res.render('track',{data:data})
+    let d = new Date();
+    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
+    let order = await Order.find({_id:req.body.id});
+    order=order[0];
+    console.log(order)
+    order.time=now;
+    order.order.push(order_details);
+    order.save(function(err, obj) {
+      if(err){throw err}
+      console.log(obj._id);
+      return res.render('pay',{amount:obj.amount,weight:order.package[0].weight,distance:order.package[0].distance,order_details:order_details,id:obj._id})
     });
   } catch (error) {
-    return res.send(JSON.stringify(error))
+    console.log(error);
+    res.render('error',{message:"some error occoured"})
   }
+  
 })
-
-
-
-// this function will calculte the price of the item according to its weight
-
-function amount_calc(package_det){
-  let data={
-    "12":{
-      "1kg":{"5km":"60","10km":"65","15km":"70","20km":"80","30km":"85","40km":"90","50km":"95"},
-      "5kg":{"5km":"65","10km":"69","15km":"80","20km":"90","30km":"110","40km":"120","50km":"130"},
-      "10kg":{"5km":"95","10km":"120","15km":"140","20km":"160","30km":"170","40km":"180","50km":"190"},
-      "20kg":{"5km":"120","10km":"135","15km":"165","20km":"175","30km":"185","40km":"189","50km":"199"},
-      "25kg":{"5km":"125","10km":"160","15km":"189","20km":"195","30km":"210","40km":"220","50km":"230"},
-      "30kg":{"5km":"140","10km":"175","15km":"200","20km":"215","30km":"230","40km":"235","50km":"240"}
-    },
-    "24":{
-      "1kg":{"60km":"100"},
-      "5kg":{"60km":"125"},
-      "10kg":{"60km":"195"},
-      "20kg":{"60km":"265"},
-      "25kg":{"60km":"280"},
-      "30kg":{"60km":"290"}
-    }
-  }
-
-  return data[package_det.delivery][package_det.weight][package_det.distance];
-}
-
-
-
-
-
 
 
 // payment
 app.post('/razorpay', async (req, res) => {
-	const payment_capture = 1
-	const currency = 'INR'
-
-	const options = {
-		amount: amount * 100,
-		currency,
-		receipt: shortid.generate(),
-		payment_capture
-	}
 
 	try {
+    let order = await Order.find({_id:req.body.id});
+    order=order[0];
+    const payment_capture = 1
+    const currency = 'INR'
+    const options = {
+      amount: order.amount * 100,
+      currency,
+      receipt: shortid.generate(),
+      payment_capture
+    }
 		const response = await razorpay.orders.create(options)
+    // 
+    order.user.trackId=response.id;
+    let d = new Date();          
+    let now = d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata', hour12: true});
+    order.time=now;
+    if(req.body.cod==true){
+      order.status="Order placed Successfully";
+      order.user.payment_status="cash on delivery";
+      const placed = new Placed();
+      placed.order.push(order);
+      placed.save((err)=>{if(err){throw err;}else{console.log("data saved")}});
+    }
+    order.save((err)=>{if(err){throw err;}else{console.log("data saved in rz")}});
+    // 
 		console.log(response)
 		res.json({
 			id: response.id,
@@ -247,7 +258,8 @@ app.post('/razorpay', async (req, res) => {
 			amount: response.amount
 		})
 	} catch (error) {
-		console.log(error)
+    console.log(error)
+		res.json({status:"error"})
 	}
 })
 
@@ -285,11 +297,17 @@ app.post("/api/payment/verify",async (req, res) => {
       placed.save((err)=>{if(err){throw err;}else{console.log("data saved")}});
     } catch (error) {
       console.log(error)
-      return res.send({status:"data not saved"});
+      return res.send({status:"error"});
     }
   }
 	res.send(response);
 });
+
+
+
+
+
+
 
 
 
